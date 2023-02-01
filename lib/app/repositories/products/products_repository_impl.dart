@@ -6,9 +6,9 @@ import 'package:delivery_app/app/models/product_model.dart';
 import 'package:dio/dio.dart';
 
 import '../../core/exceptions/repository_exception.dart';
-import './products_repository.dart';
+import 'product_repository.dart';
 
-class ProductsRepositoryImpl implements ProductsRepository {
+class ProductsRepositoryImpl implements ProductRepository {
   final CustomDio dio;
 
   ProductsRepositoryImpl({
