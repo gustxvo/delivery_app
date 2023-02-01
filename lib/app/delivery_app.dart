@@ -1,3 +1,4 @@
+import 'package:delivery_app/app/core/provider/application_binding.dart';
 import 'package:delivery_app/app/core/ui/theme/theme.config.dart';
 import 'package:delivery_app/app/pages/splash/splash_page.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +8,14 @@ class DeliveryApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Delivery App',
-      theme: ThemeConfig.theme,
-      routes: {
-        '/': (context) => const SplashPage(),
-      },
+    return ApplicationBinding(
+      child: MaterialApp(
+        title: 'Delivery App',
+        theme: ThemeConfig.theme,
+        routes: {
+          '/': (context) => const SplashPage(),
+        },
+      ),
     );
   }
 }
