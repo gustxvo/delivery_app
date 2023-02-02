@@ -1,8 +1,9 @@
-import 'package:delivery_app/app/core/extensions/formatter_extension.dart';
-import 'package:delivery_app/app/core/ui/helpers/size_extensions.dart';
-import 'package:delivery_app/app/core/ui/styles/text_styles.dart';
-import 'package:delivery_app/app/dto/order_product_dto.dart';
+import '../../../../app/core/extensions/formatter_extension.dart';
+import '../../../../app/core/ui/helpers/size_extensions.dart';
+import '../../../../app/core/ui/styles/text_styles.dart';
+import '../../../../app/dto/order_product_dto.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ShoppingBagWidget extends StatelessWidget {
   final List<OrderProductDto> bag;
@@ -11,6 +12,14 @@ class ShoppingBagWidget extends StatelessWidget {
     super.key,
     required this.bag,
   });
+
+  Future<void> _goOrder(BuildContext context) async {
+    final navigator = Navigator.of(context);
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('accessToken')) {
+      final loginResult = await navigator.pushNamed('/auth/login');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +42,9 @@ class ShoppingBagWidget extends StatelessWidget {
         ),
       ),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          _goOrder(context);
+        },
         child: Stack(
           children: [
             const Align(
