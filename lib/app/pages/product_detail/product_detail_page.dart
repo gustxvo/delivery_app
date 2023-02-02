@@ -1,13 +1,78 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:delivery_app/app/core/ui/helpers/size_extensions.dart';
-import 'package:delivery_app/app/core/ui/styles/text_styles.dart';
-import 'package:delivery_app/app/core/ui/widgets/delivery_app_bar.dart';
-import 'package:delivery_app/app/core/ui/widgets/delivery_button.dart';
-import 'package:delivery_app/app/core/ui/widgets/delivery_increment_decrement_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProductDetailPage extends StatelessWidget {
-  const ProductDetailPage({super.key});
+import '../../../app/dto/order_product_dto.dart';
+import '../../core/extensions/formatter_extension.dart';
+import '../../core/ui/base_state/base_state.dart';
+import '../../core/ui/helpers/size_extensions.dart';
+import '../../core/ui/styles/text_styles.dart';
+import '../../core/ui/widgets/delivery_app_bar.dart';
+import '../../core/ui/widgets/delivery_increment_decrement_button.dart';
+import '../../models/product_model.dart';
+import '../../pages/product_detail/product_detail_controller.dart';
+
+class ProductDetailPage extends StatefulWidget {
+  final ProductModel product;
+  final OrderProductDto? order;
+
+  const ProductDetailPage({
+    super.key,
+    required this.product,
+    this.order,
+  });
+
+  @override
+  State<ProductDetailPage> createState() => _ProductDetailPageState();
+}
+
+class _ProductDetailPageState
+    extends BaseState<ProductDetailPage, ProductDetailController> {
+  @override
+  void initState() {
+    super.initState();
+    final amount = widget.order?.amount ?? 1;
+    controller.initial(amount, widget.order != null);
+  }
+
+  void _showConfirmDelete(int amount) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Deseja excluir o produto?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Cancelar',
+                style: context.textStyles.textBold.copyWith(color: Colors.red),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.of(context).pop(
+                  OrderProductDto(
+                    product: widget.product,
+                    amount: amount,
+                  ),
+                );
+              },
+              child: Text(
+                'Confirmar',
+                style: context.textStyles.textBold,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +84,9 @@ class ProductDetailPage extends StatelessWidget {
           Container(
             width: context.screenWidth,
             height: context.percentHeight(.4),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(
-                    'https://assets.unileversolutions.com/recipes-v2/106684.jpg?imwidth=800'),
+                image: NetworkImage(widget.product.image),
                 fit: BoxFit.cover,
               ),
             ),
@@ -33,19 +97,18 @@ class ProductDetailPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
-              'X-Salada',
+              widget.product.name,
               style: context.textStyles.textExtraBold.copyWith(fontSize: 22),
             ),
           ),
           const SizedBox(
             height: 10,
           ),
-          const Expanded(
+          Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: SingleChildScrollView(
-                child: Text(
-                    'Lanche acompanha pão, hambúguer, mussarela, alface, tomate e maionese'),
+                child: Text(widget.product.description),
               ),
             ),
           ),
@@ -56,36 +119,74 @@ class ProductDetailPage extends StatelessWidget {
                 width: context.percentWidth(.5),
                 height: 68,
                 padding: const EdgeInsets.all(8),
-                child: const DeliveryIncrementDecrementButton(),
+                child: BlocBuilder<ProductDetailController, int>(
+                  builder: (context, amount) {
+                    return DeliveryIncrementDecrementButton(
+                      amount: amount,
+                      onDecrement: () {
+                        controller.decrement();
+                      },
+                      onIncrement: () {
+                        controller.increment();
+                      },
+                    );
+                  },
+                ),
               ),
               Container(
                 width: context.percentWidth(.5),
                 height: 68,
                 padding: const EdgeInsets.all(8),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Adicionar',
-                        style:
-                            context.textStyles.textExtraBold.copyWith(fontSize: 13),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: AutoSizeText(
-                          r'R$600, 99',
-                          maxFontSize: 13,
-                          minFontSize: 5,
-                          maxLines: 1,
+                child: BlocBuilder<ProductDetailController, int>(
+                  builder: (context, amount) {
+                    return ElevatedButton(
+                      style: amount == 0
+                          ? ElevatedButton.styleFrom(backgroundColor: Colors.red)
+                          : null,
+                      onPressed: () {
+                        if (amount == 0) {
+                          _showConfirmDelete(amount);
+                        } else {
+                          Navigator.of(context).pop(
+                            OrderProductDto(
+                              product: widget.product,
+                              amount: amount,
+                            ),
+                          );
+                        }
+                      },
+                      child: Visibility(
+                        visible: amount > 0,
+                        replacement: Text(
+                          'Excluir Produto',
                           style: context.textStyles.textExtraBold,
                         ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Adicionar',
+                              style: context.textStyles.textExtraBold
+                                  .copyWith(fontSize: 13),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: AutoSizeText(
+                                (widget.product.price * amount).currencyPtBr,
+                                maxFontSize: 13,
+                                minFontSize: 5,
+                                maxLines: 1,
+                                textAlign: TextAlign.center,
+                                style: context.textStyles.textExtraBold,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               )
             ],

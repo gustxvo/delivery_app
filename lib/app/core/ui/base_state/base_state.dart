@@ -1,8 +1,8 @@
-import 'package:bloc/bloc.dart';
-import 'package:delivery_app/app/core/ui/helpers/loader.dart';
-import 'package:delivery_app/app/core/ui/helpers/messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../app/core/ui/helpers/loader.dart';
+import '../../../../app/core/ui/helpers/messages.dart';
 
 abstract class BaseState<T extends StatefulWidget, C extends BlocBase>
     extends State<T> with Loader, Messages {
@@ -17,5 +17,5 @@ abstract class BaseState<T extends StatefulWidget, C extends BlocBase>
     });
   }
 
-  void onReady();
+  void onReady() {}
 }
