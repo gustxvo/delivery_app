@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../../app/core/extensions/formatter_extension.dart';
 import '../../../../app/core/ui/helpers/size_extensions.dart';
 import '../../../../app/core/ui/styles/text_styles.dart';
 import '../../../../app/dto/order_product_dto.dart';
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ShoppingBagWidget extends StatelessWidget {
   final List<OrderProductDto> bag;
@@ -18,7 +19,12 @@ class ShoppingBagWidget extends StatelessWidget {
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey('accessToken')) {
       final loginResult = await navigator.pushNamed('/auth/login');
+
+      if (loginResult == null || loginResult == false) {
+        return;
+      }
     }
+    await navigator.pushNamed('/order', arguments: bag);
   }
 
   @override
