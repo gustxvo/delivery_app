@@ -1,16 +1,21 @@
-# delivery_app
+# Delivery App - Dart Week #9
 
-A new Flutter project.
+Delivery App that displays the list of available items, allowing you to choose several items and their respective amounts, then add to the cart to make the payment.
 
-## Getting Started
+## What I've learned
 
-This project is a starting point for a Flutter application.
+During this week of the event, I, who have experience mainly with developing apps for native Android, got to know a little about this tool in practice.
 
-A few resources to get you started if this is your first Flutter project:
+- Extensions and mixins are Dart features to speed up development;
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Provider used for managing dependencies;
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Bloc and Cubit used for state management;
+
+In addition, several design pattern techniques were applied and I was able to learn a lot from the perspective of an experienced professional explaining his line of reasoning.
+
+## Experiences acquired
+
+Having a Java and Object Oriented background and also experience with Kotlin and its functional features, even Dart being a new language for me, lots of concepts got inherited (pun intended) and ended up coming as second nature, allowing me to focus only on what the framework has to offer.
+
+It was a great experience and I enjoyed a lot.
