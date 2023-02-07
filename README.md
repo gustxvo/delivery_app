@@ -12,10 +12,16 @@ During this week of the event, I, who have experience mainly with developing app
 
 - Bloc and Cubit used for state management;
 
+I also learned other topics such as how to properly use an api that requires authentication, not something strictly related to Flutter, but crucial to all kinds of applications that use a rest api.
+
 In addition, several design pattern techniques were applied and I was able to learn a lot from the perspective of an experienced professional explaining his line of reasoning.
 
-## Experiences acquired
+## Experience
 
 Having a Java and Object Oriented background and also experience with Kotlin and its functional features, even Dart being a new language for me, lots of concepts got inherited (pun intended) and ended up coming as second nature, allowing me to focus only on what the framework has to offer.
 
 It was a great experience and I enjoyed a lot.
+
+## Versions of README
+
+[English](./README.md) | [Portuguese](./README-ptBR.md)
